@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -e '.[dev]'
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest --cov=contextroast --cov-branch --cov-fail-under=95 --cov-report=term-missing
+      - run: contextroast run examples/support.json --input-price 2 --output-price 8 --output-dir reports/support
+      - run: contextroast run examples/shipping.yaml --output-dir reports/shipping
+      - name: Run offline Python example
+        run: contextroast run examples/retrieval.json --provider python --entrypoint examples.retrieval_agent:predict --allow-paid --export-context --output-dir reports/retrieval
+      - name: Check holdout failure
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          result = subprocess.run([
+              'contextroast', 'run', 'examples/retrieval.json', '--provider', 'python',
+              '--entrypoint', 'examples.retrieval_agent:predict', '--allow-paid',
+              '--holdout', 'examples/retrieval-holdout.json', '--export-context',
+              '--output-dir', 'reports/holdout',
+          ])
+          assert result.returncode == 1, 'Expected the known holdout gate to fail'
+          report = json.loads(Path('reports/holdout/report.json').read_text())
+          schema = json.loads(Path('reports/holdout/recommended-context.schema.json').read_text())
+          assert report['holdout']['status'] == 'FAIL'
+          assert report['evaluation']['invocations'] == 108
+          assert schema['x-contextroast']['deployment_ready'] is False
+          PY
+
+  dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[api]' 'pip-audit>=2.9,<3'
+      - run: pip-audit --skip-editable
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan Git history
+        run: |
+          curl --fail --silent --show-error --location \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz \
+            --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" --directory "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git --log-opts=--all --config .gitleaks.toml --redact --no-banner .
+
+  package:
+    needs: [test, dependencies, secrets]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.11'
+      - run: python -m pip install build 'twine>=6,<7'
+      - run: python -m build
+      - run: python -m twine check dist/*.whl dist/*.tar.gz
+      - name: Install and run wheel outside the checkout
+        run: |
+          python -m venv "$RUNNER_TEMP/wheel-venv"
+          wheel_python="$RUNNER_TEMP/wheel-venv/bin/python"
+          "$wheel_python" -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$wheel_python" -c "import importlib.util; assert importlib.util.find_spec('httpx') is None"
+          "$wheel_python" -m contextroast --version
+          "$RUNNER_TEMP/wheel-venv/bin/contextroast" validate "$GITHUB_WORKSPACE/examples/support.json"
+          "$RUNNER_TEMP/wheel-venv/bin/contextroast" run "$GITHUB_WORKSPACE/examples/support.json" --output-dir wheel-support
+          "$RUNNER_TEMP/wheel-venv/bin/contextroast" run "$GITHUB_WORKSPACE/examples/shipping.yaml" --output-dir wheel-shipping
+          cp "$GITHUB_WORKSPACE/examples/retrieval_agent.py" ./retrieval_agent.py
+          "$RUNNER_TEMP/wheel-venv/bin/contextroast" run "$GITHUB_WORKSPACE/examples/retrieval.json" --provider python --entrypoint retrieval_agent:predict --allow-paid --export-context --output-dir wheel-retrieval
+          "$wheel_python" - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+          examples = Path(os.environ['GITHUB_WORKSPACE']) / 'examples'
+          result = subprocess.run([
+              sys.executable, '-m', 'contextroast', 'run', str(examples / 'retrieval.json'),
+              '--provider', 'python', '--entrypoint', 'retrieval_agent:predict', '--allow-paid',
+              '--holdout', str(examples / 'retrieval-holdout.json'), '--export-context',
+              '--output-dir', 'wheel-holdout',
+          ])
+          assert result.returncode == 1
+          report = json.loads(Path('wheel-holdout/report.json').read_text())
+          assert report['holdout']['status'] == 'FAIL' and report['deployment_ready'] is False
+          PY
+      - name: Preserve checked release packages
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: contextroast-packages
+          path: dist/
+          if-no-files-found: error

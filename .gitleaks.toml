@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Dataset-validation prose, not an API key"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^(README\.md|docs/technical-reference\.md)$''']
+regexes = ['''^undeclared/missing$''']
