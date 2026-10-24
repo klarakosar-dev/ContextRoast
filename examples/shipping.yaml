@@ -1,0 +1,57 @@
+version: 1
+name: synthetic-shipping-quotes
+instruction: >-
+  Calculate a shipping quote. The input is Ship WEIGHT kg to COUNTRY.
+  Use shipping_rates[COUNTRY].base_cents + WEIGHT * per_kg_cents.
+  Return an object with integer amount_cents and the supplied currency.
+mock_task: shipping-quote
+context_fields: [shipping_rates, currency, delivery_notes, marketing_copy]
+cases:
+  - id: gb-light
+    input: Ship 2 kg to GB.
+    context:
+      shipping_rates: {GB: {base_cents: 100, per_kg_cents: 50}}
+      currency: GBP
+      delivery_notes: Leave parcels at reception; contact the building manager on arrival.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 200, currency: GBP}
+  - id: gb-heavy
+    input: Ship 10 kg to GB.
+    context:
+      shipping_rates: {GB: {base_cents: 100, per_kg_cents: 50}}
+      currency: GBP
+      delivery_notes: The loading bay opens at nine. Use the east entrance for large parcels.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 600, currency: GBP}
+  - id: us-light
+    input: Ship 1 kg to US.
+    context:
+      shipping_rates: {US: {base_cents: 500, per_kg_cents: 200}}
+      currency: USD
+      delivery_notes: The recipient works from home and prefers deliveries before lunch.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 700, currency: USD}
+  - id: us-heavy
+    input: Ship 4 kg to US.
+    context:
+      shipping_rates: {US: {base_cents: 500, per_kg_cents: 200}}
+      currency: USD
+      delivery_notes: A doorman can accept this parcel. Do not leave it on the street.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 1300, currency: USD}
+  - id: de-light
+    input: Ship 3 kg to DE.
+    context:
+      shipping_rates: {DE: {base_cents: 200, per_kg_cents: 100}}
+      currency: EUR
+      delivery_notes: Deliver to the warehouse office and ask the receiving team to sign.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 500, currency: EUR}
+  - id: de-heavy
+    input: Ship 8 kg to DE.
+    context:
+      shipping_rates: {DE: {base_cents: 200, per_kg_cents: 100}}
+      currency: EUR
+      delivery_notes: Use the service lift for this parcel. The public entrance is closed.
+      marketing_copy: Our shipping service connects small businesses with their customers every day.
+    expected: {amount_cents: 1000, currency: EUR}

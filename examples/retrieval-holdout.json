@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "name": "curated-faq-holdout",
+  "instruction": "Retrieve the most relevant FAQ article and return article_id and its answer.",
+  "context_fields": [
+    "billing_faq",
+    "access_faq",
+    "shipping_faq",
+    "legacy_faq",
+    "marketing_faq"
+  ],
+  "cases": [
+    {
+      "id": "logo",
+      "input": "Where can I download the company brand logo?",
+      "context": {
+        "billing_faq": [
+          {
+            "id": "invoice",
+            "question": "Download monthly invoice billing statement",
+            "answer": "Open Billing, select the month, and choose Download invoice."
+          },
+          {
+            "id": "refund",
+            "question": "Refund duplicate payment charge",
+            "answer": "Send the two payment references to the billing team for review."
+          },
+          {
+            "id": "renewal",
+            "question": "Cancel automatic renewal subscription",
+            "answer": "Turn off Auto-renew in Billing before the renewal date."
+          }
+        ],
+        "access_faq": [
+          {
+            "id": "password",
+            "question": "Reset forgotten account password",
+            "answer": "Use Forgot password on the sign-in page and follow the email link."
+          },
+          {
+            "id": "mfa",
+            "question": "Replace lost authenticator device",
+            "answer": "Sign in with a recovery code, then register a new authenticator."
+          },
+          {
+            "id": "invite",
+            "question": "Invite teammate workspace membership",
+            "answer": "Open Workspace settings, choose Members, then Invite."
+          }
+        ],
+        "shipping_faq": [
+          {
+            "id": "tracking",
+            "question": "Track package delivery shipment",
+            "answer": "Open the order and follow its carrier tracking link."
+          },
+          {
+            "id": "address",
+            "question": "Change delivery shipping address",
+            "answer": "Edit the shipping address before the order enters dispatch."
+          }
+        ],
+        "legacy_faq": [
+          {
+            "id": "fax",
+            "question": "Send purchase order by fax",
+            "answer": "Fax ordering has been retired; use the online order form."
+          },
+          {
+            "id": "disc",
+            "question": "Install application from CD-ROM disc",
+            "answer": "Disc installers are unsupported; download the current installer."
+          }
+        ],
+        "marketing_faq": [
+          {
+            "id": "logo",
+            "question": "Download company brand logo",
+            "answer": "Download the approved logo files from the brand assets page."
+          },
+          {
+            "id": "photos",
+            "question": "Use promotional product photographs",
+            "answer": "Use the approved image library and include the supplied credits."
+          }
+        ]
+      },
+      "expected": {
+        "article_id": "logo",
+        "answer": "Download the approved logo files from the brand assets page."
+      }
+    },
+    {
+      "id": "refund",
+      "input": "Please refund a duplicate charge on my payment.",
+      "context": {
+        "billing_faq": [
+          {
+            "id": "invoice",
+            "question": "Download monthly invoice billing statement",
+            "answer": "Open Billing, select the month, and choose Download invoice."
+          },
+          {
+            "id": "refund",
+            "question": "Refund duplicate payment charge",
+            "answer": "Send the two payment references to the billing team for review."
+          },
+          {
+            "id": "renewal",
+            "question": "Cancel automatic renewal subscription",
+            "answer": "Turn off Auto-renew in Billing before the renewal date."
+          }
+        ],
+        "access_faq": [
+          {
+            "id": "password",
+            "question": "Reset forgotten account password",
+            "answer": "Use Forgot password on the sign-in page and follow the email link."
+          },
+          {
+            "id": "mfa",
+            "question": "Replace lost authenticator device",
+            "answer": "Sign in with a recovery code, then register a new authenticator."
+          },
+          {
+            "id": "invite",
+            "question": "Invite teammate workspace membership",
+            "answer": "Open Workspace settings, choose Members, then Invite."
+          }
+        ],
+        "shipping_faq": [
+          {
+            "id": "tracking",
+            "question": "Track package delivery shipment",
+            "answer": "Open the order and follow its carrier tracking link."
+          },
+          {
+            "id": "address",
+            "question": "Change delivery shipping address",
+            "answer": "Edit the shipping address before the order enters dispatch."
+          }
+        ],
+        "legacy_faq": [
+          {
+            "id": "fax",
+            "question": "Send purchase order by fax",
+            "answer": "Fax ordering has been retired; use the online order form."
+          },
+          {
+            "id": "disc",
+            "question": "Install application from CD-ROM disc",
+            "answer": "Disc installers are unsupported; download the current installer."
+          }
+        ],
+        "marketing_faq": [
+          {
+            "id": "logo",
+            "question": "Download company brand logo",
+            "answer": "Download the approved logo files from the brand assets page."
+          },
+          {
+            "id": "photos",
+            "question": "Use promotional product photographs",
+            "answer": "Use the approved image library and include the supplied credits."
+          }
+        ]
+      },
+      "expected": {
+        "article_id": "refund",
+        "answer": "Send the two payment references to the billing team for review."
+      }
+    }
+  ]
+}

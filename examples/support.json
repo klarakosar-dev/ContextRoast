@@ -1,0 +1,431 @@
+{
+  "version": 1,
+  "name": "synthetic-support-routing",
+  "instruction": "Route the support message using the first matching routing_policy route (case-insensitive keyword substring), otherwise default_queue. Set priority to high if account.tier is in priority_tiers, otherwise normal. Return an object with queue and priority.",
+  "mock_task": "support-routing",
+  "context_fields": [
+    "routing_policy",
+    "account",
+    "customer_notes",
+    "recent_orders",
+    "brand_voice"
+  ],
+  "cases": [
+    {
+      "id": "invoice-enterprise",
+      "input": "Please send my invoice for last month.",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "enterprise"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-1-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-1-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "billing",
+        "priority": "high"
+      }
+    },
+    {
+      "id": "refund-standard",
+      "input": "Can I get a refund for the duplicate charge?",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "standard"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-2-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-2-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "billing",
+        "priority": "normal"
+      }
+    },
+    {
+      "id": "login-premium",
+      "input": "I cannot login after resetting my password.",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "premium"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-3-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-3-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "technical",
+        "priority": "high"
+      }
+    },
+    {
+      "id": "error-standard",
+      "input": "The export screen shows an error.",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "standard"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-4-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-4-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "technical",
+        "priority": "normal"
+      }
+    },
+    {
+      "id": "general-standard",
+      "input": "Where can I find the getting started guide?",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "standard"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-5-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-5-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "general",
+        "priority": "normal"
+      }
+    },
+    {
+      "id": "general-enterprise",
+      "input": "We would like to arrange team training.",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "enterprise"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-6-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-6-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "general",
+        "priority": "high"
+      }
+    },
+    {
+      "id": "payment-premium",
+      "input": "Our payment was declined this morning.",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "premium"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-7-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-7-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "billing",
+        "priority": "high"
+      }
+    },
+    {
+      "id": "password-standard",
+      "input": "How do I change my password?",
+      "context": {
+        "routing_policy": {
+          "routes": [
+            {
+              "queue": "billing",
+              "keywords": [
+                "invoice",
+                "refund",
+                "payment"
+              ]
+            },
+            {
+              "queue": "technical",
+              "keywords": [
+                "login",
+                "error",
+                "password"
+              ]
+            }
+          ],
+          "default_queue": "general",
+          "priority_tiers": [
+            "enterprise",
+            "premium"
+          ]
+        },
+        "account": {
+          "tier": "standard"
+        },
+        "customer_notes": "The customer attended a product webinar and asked for a recording. Their team works across several time zones and prefers concise updates. A previous check-in covered dashboard customization and internal onboarding. They have not requested any change to their subscription or routing preferences. These notes are background from a quarterly relationship review.",
+        "recent_orders": [
+          {
+            "id": "ORDER-8-A",
+            "item": "training workbook",
+            "status": "delivered"
+          },
+          {
+            "id": "ORDER-8-B",
+            "item": "desk reference guide",
+            "status": "processing"
+          }
+        ],
+        "brand_voice": "Use a warm, professional voice. Prefer short sentences and clear next steps. Avoid jargon, excessive punctuation, and promotional claims in customer messages."
+      },
+      "expected": {
+        "queue": "technical",
+        "priority": "normal"
+      }
+    }
+  ]
+}

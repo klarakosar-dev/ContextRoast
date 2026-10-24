@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="ContextRoast curated FAQ example showing a failed holdout">
+<rect width="1280" height="640" rx="28" fill="#101827"/>
+<circle cx="1180" cy="35" r="180" fill="#F97316" opacity=".08"/>
+<rect x="60" y="45" width="6" height="34" rx="3" fill="#FB923C"/>
+<text x="82" y="72" font-family="Arial,sans-serif" font-size="30" font-weight="bold" fill="#FFF7ED">CONTEXTROAST</text>
+<text x="990" y="72" font-family="Arial,sans-serif" font-size="16" fill="#CBD5E1">CONTEXT ABLATION</text>
+<text x="60" y="150" font-family="Arial,sans-serif" font-size="39" font-weight="bold" fill="#FFFFFF">The holdout caught a bad trim.</text>
+<text x="60" y="190" font-family="Arial,sans-serif" font-size="20" fill="#CBD5E1">Some removed context mattered on new questions.</text>
+<rect x="60" y="229" width="560" height="180" rx="16" fill="#1F2937"/>
+<text x="85" y="272" font-family="Arial,sans-serif" font-size="17" fill="#CBD5E1">CONTEXT FIELDS REMOVED</text>
+<text x="85" y="349" font-family="Arial,sans-serif" font-size="61" font-weight="bold" fill="#FDBA74">2/5</text>
+<text x="315" y="349" font-family="Arial,sans-serif" font-size="19" fill="#E2E8F0">Accuracy: 100% to 100%</text>
+<rect x="650" y="229" width="570" height="180" rx="16" fill="#1F2937"/>
+<text x="680" y="272" font-family="Arial,sans-serif" font-size="17" fill="#CBD5E1">INPUT-SIZE REDUCTION</text>
+<text x="680" y="349" font-family="Arial,sans-serif" font-size="60" font-weight="bold" fill="#FDBA74">29.14%</text>
+<text x="680" y="388" font-family="Arial,sans-serif" font-size="16" fill="#CBD5E1">3,864 to 2,738</text>
+<text x="60" y="455" font-family="Arial,sans-serif" font-size="16" fill="#CBD5E1">BEFORE</text>
+<rect x="180" y="440" width="500" height="18" rx="9" fill="#FCA5A5"/>
+<text x="60" y="499" font-family="Arial,sans-serif" font-size="16" fill="#CBD5E1">AFTER</text>
+<rect x="180" y="484" width="500" height="18" rx="9" fill="#374151"/>
+<rect x="180" y="484" width="354.28" height="18" rx="9" fill="#86EFAC"/>
+<rect x="720" y="435" width="500" height="78" rx="12" fill="#293444"/>
+<circle cx="748" cy="475" r="8" fill="#FDA4AF"/>
+<text x="770" y="481" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#FDA4AF">HOLDOUT FAILED / NOT DEPLOYMENT READY</text>
+<line x1="60" y1="538" x2="1220" y2="538" stroke="#475569"/>
+<text x="60" y="575" font-family="Arial,sans-serif" font-size="15" fill="#CBD5E1">SERIALIZED INPUT PROXY (NOT AGENT TOKEN USAGE)</text>
+<text x="60" y="605" font-family="Arial,sans-serif" font-size="15" fill="#CBD5E1">CURATED FAQ EXAMPLE / NOT A REAL MODEL</text>
+<text x="1040" y="605" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#FDBA74">ContextRoast</text>
+</svg>
