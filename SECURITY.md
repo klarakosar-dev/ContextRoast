@@ -1,6 +1,6 @@
 # Security
 
-Report vulnerabilities privately through [GitHub's reporting form](https://github.com/klarakosar-dev/ContextRoast/security/advisories/new). Include the affected version, impact and a minimal reproduction without real credentials or customer data. If the form is unavailable, open an issue requesting a private contact; leave out vulnerability details.
+Report vulnerabilities privately through [GitHub's reporting form](https://github.com/newapple77/ContextRoast/security/advisories/new). Include the affected version, impact and a minimal reproduction without real credentials or customer data. If the form is unavailable, open an issue requesting a private contact; leave out vulnerability details.
 
 Security fixes target the latest release. Older alpha versions are unsupported.
 

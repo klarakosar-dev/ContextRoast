@@ -7,7 +7,7 @@ Python 3.11+ · MIT · experimental alpha
 ## Try it
 
 ```bash
-git clone https://github.com/klarakosar-dev/ContextRoast.git
+git clone https://github.com/newapple77/ContextRoast.git
 cd ContextRoast
 python3 -m venv .venv
 source .venv/bin/activate
@@ -56,4 +56,4 @@ These are curated examples. The 29.14% reduction measures serialized input size,
 
 JSON and Markdown reports contain detailed results and may include sensitive data. The SVG card contains aggregate metrics only. See [security and privacy](SECURITY.md).
 
-[CLI and accounting reference](docs/technical-reference.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/klarakosar-dev/ContextRoast/releases) · [MIT licence](LICENSE)
+[CLI and accounting reference](docs/technical-reference.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/newapple77/ContextRoast/releases) · [MIT licence](LICENSE)
